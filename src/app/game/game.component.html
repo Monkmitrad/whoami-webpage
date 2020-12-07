@@ -1,0 +1,17 @@
+<div class="container text-white">
+    <h1 class="text-center m-2">Game</h1>
+
+    <table class="table table-dark m-2">
+        <thead>
+            <th>#</th>
+            <th>Name</th>
+            <th>Assigned Player</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of users">
+                <td>{{ users.indexOf(user) }}</td>
+                <td>{{ user }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
