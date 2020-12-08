@@ -1,4 +1,4 @@
-<div class="container text-white">
+<div class="container-fluid text-white">
     <h1 class="text-center m-2">Game</h1>
 
     <table class="table table-dark m-2">
@@ -6,12 +6,32 @@
             <th>#</th>
             <th>Name</th>
             <th>Assigned Player</th>
+            <th>Person/Animal/Character to guess</th>
+            <th *ngIf="!gameStarted">Ready</th>
         </thead>
         <tbody>
             <tr *ngFor="let user of users">
                 <td>{{ users.indexOf(user) }}</td>
                 <td>{{ user }}</td>
+                <td>Lorem</td>
+                <td>Lorem</td>
+                <td>
+                    <label class="b-contain">
+                        <input type="checkbox" (change)="onReady($event)" [disabled]="user != ownUser">
+                        <div class="b-input"></div>
+                    </label>
+                </td>
             </tr>
         </tbody>
     </table>
+
+    <form #submissionForm="ngForm" class="bg-dark mt-4 d-flex flex-wrap justify-content-center"  (ngSubmit)="onSubmit(submissionForm)" *ngIf="gameStarted">
+        <div class="input-group mb-4">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon-arrow-right"></i></span>
+            </div>
+            <input type="text" class="form-control" placeholder="Max Mustermann" name="submission" required ngModel>
+        </div>
+        <button type="submit" class="btn btn-primary px-4 w-50" [disabled]="!submissionForm.valid">Submit</button>
+    </form>
 </div>

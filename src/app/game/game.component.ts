@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-game',
@@ -14,9 +15,25 @@ export class GameComponent implements OnInit {
     'User4'
   ];
 
+  gameStarted: boolean = false;
+  ownUser: string = "User2";
+
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  onSubmit(submissionForm: NgForm) {
+    if (submissionForm.valid) {
+      const entry: string = submissionForm.value.submission;
+      console.log(entry);
+
+      // TODO: API Request to Server to submit entry
+    }
+  }
+
+  onReady(event: any) {
+    console.log(event.target.checked);
   }
 
 }
