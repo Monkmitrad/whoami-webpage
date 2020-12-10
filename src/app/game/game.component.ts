@@ -26,6 +26,7 @@ export class GameComponent implements OnInit {
   onSubmit(submissionForm: NgForm) {
     if (submissionForm.valid) {
       const entry: string = submissionForm.value.submission;
+      submissionForm.resetForm();
       console.log(entry);
 
       // TODO: API Request to Server to submit entry
@@ -33,7 +34,12 @@ export class GameComponent implements OnInit {
   }
 
   onReady(event: any) {
-    console.log(event.target.checked);
+    // console.log(event.target.checked);
+    if (event.target.checked) {
+      this.gameStarted = true;
+    }
+
+    // TODO: API Request to Server to make player ready
   }
 
 }
