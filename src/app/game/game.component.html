@@ -10,14 +10,14 @@
             <th *ngIf="!gameStarted">Ready</th>
         </thead>
         <tbody>
-            <tr *ngFor="let user of users">
-                <td>{{ users.indexOf(user) }}</td>
-                <td>{{ user }}</td>
-                <td>Lorem</td>
-                <td>Lorem</td>
+            <tr *ngFor="let player of players">
+                <td>{{ players.indexOf(player) }}</td>
+                <td>{{ player.name }}</td>
+                <td>{{ player.assignedPlayer }}</td>
+                <td>{{ player.submissionText }}</td>
                 <td>
                     <label class="b-contain">
-                        <input type="checkbox" (change)="onReady($event)" [disabled]="user != ownUser">
+                        <input type="checkbox" (change)="onReady($event)" [disabled]="player.name != ownUser">
                         <div class="b-input"></div>
                     </label>
                 </td>

@@ -9,6 +9,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { FooterComponent } from './footer/footer.component';
 import { LoginComponent } from './login/login.component';
 import { GameComponent } from './game/game.component';
+import { Constants } from './config/constants';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,7 @@ import { GameComponent } from './game/game.component';
     FormsModule,
     HttpClientModule,
   ],
-  providers: [],
+  providers: [Constants],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
