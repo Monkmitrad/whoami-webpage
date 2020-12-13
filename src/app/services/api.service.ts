@@ -40,11 +40,7 @@ export class ApiService {
     return this.post('add', {
       playerName,
       gameID
-    }).pipe(map((response: {
-      response: number
-    }) => {
-      return response.response;
-    }));
+    });
   }
 
   public listPlayers(): Observable<Player[]> {

@@ -1,33 +1,48 @@
+import { SocketService } from './../services/socket.service';
 import { Player } from './../shared/models/player';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ApiService } from '../services/api.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.css'],
 })
-export class GameComponent implements OnInit {
+export class GameComponent implements OnInit, OnDestroy {
 
   players: Player[] = [];
 
-  gameStarted: boolean = false;
-  ownUser: string = 'Test';
-  assignedUser: string = 'User1';
+  gameStarted = false;
+  ownUser = 'Test';
+  assignedUser = 'User1';
+
+  // Subscriptions
+  listPlayersSub: Subscription;
+  playerSocketSub: Subscription;
 
   constructor(
-    private apiService: ApiService
+    private apiService: ApiService,
+    private socketService: SocketService
   ) { }
 
   ngOnInit(): void {
-    this.players = [];
-    this.apiService.listPlayers().subscribe((players: Player[]) => {
+    this.playerSocketSub = this.socketService.players.subscribe((players: Player[]) => {
+      this.players = players;
+    });
+    this.listPlayersSub = this.apiService.listPlayers().subscribe((players: Player[]) => {
       // console.log(players);
+      this.players = [];
       players.forEach(element => {
         this.players.push(element);
       });
     });
+  }
+
+  ngOnDestroy(): void {
+    this.listPlayersSub.unsubscribe();
+    this.playerSocketSub.unsubscribe();
   }
 
   onReady(event: any): void {

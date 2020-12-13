@@ -23,19 +23,17 @@ export class LoginComponent implements OnInit {
       const user: string = loginForm.value.name;
       const id: number = loginForm.value.id;
       console.log(user, id);
-      let userID: number = 0;
-      // TODO: API Request to Server to validate Game-ID and register User for game
-      this.apiService.addPlayer(user, id).subscribe((test) => userID = test);
-      if (userID) {
-        console.log(userID);
-      }
-      const apiResponse: boolean = true;
-      if (apiResponse) {
+      let userID = '';
+      // TODO: API Request to Server to validate Game-ID
+      this.apiService.addPlayer(user, id).subscribe((responseId: {response: string}) => {
+        userID = responseId.response;
+
         // login succesful and user registered for game
         // save userID in localStorage and send to game
-        localStorage.setItem('userID', userID.toString());
+
+        localStorage.setItem('userID', userID);
         this.router.navigate(['/game']);
-      }
+      });
     }
   }
 
