@@ -52,7 +52,7 @@ export class ApiService {
     this.post('ready', {
       name: playerName,
       status
-    }).subscribe((response) => console.log(response));
+    }).subscribe((response) => response);
   }
 
   public submission(submissionText: string, playerName: string): void {
@@ -62,4 +62,7 @@ export class ApiService {
     }).subscribe((response) => console.log(response));
   }
 
+  public checkID(id: number): Observable<boolean> {
+    return this.post('id', id).pipe(map((response: {response: boolean}) => response.response));
+  }
 }

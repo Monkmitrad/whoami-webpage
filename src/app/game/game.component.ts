@@ -1,3 +1,4 @@
+import { GameService } from './../services/game.service';
 import { SocketService } from './../services/socket.service';
 import { Player } from './../shared/models/player';
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -24,13 +25,16 @@ export class GameComponent implements OnInit, OnDestroy {
 
   constructor(
     private apiService: ApiService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private gameService: GameService
   ) { }
 
   ngOnInit(): void {
+
     this.playerSocketSub = this.socketService.players.subscribe((players: Player[]) => {
       this.players = players;
     });
+
     this.listPlayersSub = this.apiService.listPlayers().subscribe((players: Player[]) => {
       // console.log(players);
       this.players = [];
@@ -38,6 +42,8 @@ export class GameComponent implements OnInit, OnDestroy {
         this.players.push(element);
       });
     });
+
+    this.ownUser = this.gameService.getName();
   }
 
   ngOnDestroy(): void {
