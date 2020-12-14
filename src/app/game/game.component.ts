@@ -34,8 +34,9 @@ export class GameComponent implements OnInit, OnDestroy {
     this.playerSocketSub = this.socketService.players.subscribe((players: Player[]) => {
       this.players = players;
     });
+    console.log(this.gameService.getGameID());
 
-    this.listPlayersSub = this.apiService.listPlayers().subscribe((players: Player[]) => {
+    this.listPlayersSub = this.apiService.listPlayers(this.gameService.getGameID()).subscribe((players: Player[]) => {
       // console.log(players);
       this.players = [];
       players.forEach(element => {
@@ -58,8 +59,7 @@ export class GameComponent implements OnInit, OnDestroy {
       this.gameStarted = true;
     }
 
-    // TODO: API Request to Server to make player ready
-    this.apiService.playerReady(status, this.ownUser);
+    this.apiService.playerReady(status, this.gameService.getID());
   }
 
   onSubmit(submissionForm: NgForm): void {

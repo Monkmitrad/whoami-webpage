@@ -18,7 +18,7 @@ export class ApiService {
   // default methods
 
   public get(url: string, options?: any): any {
-    return this.http.get(this.constants.API_ENDPOINT + url, options).pipe(tap((response: any) => response));
+    return this.http.get(this.constants.API_ENDPOINT + url, options);
   }
 
   public post(url: string, data?: any, options?: any): Observable<any> {
@@ -35,6 +35,11 @@ export class ApiService {
 
   // special methods
 
+  // creates a new game and returns gameID
+  public createGame(): Observable<number> {
+    return this.post('create').pipe(map((response: {response: number}) => response.response));
+  }
+
   // registers player and return unique id of player
   public addPlayer(playerName: string, gameID: number): any {
     return this.post('add', {
@@ -43,14 +48,15 @@ export class ApiService {
     });
   }
 
-  public listPlayers(): Observable<Player[]> {
-    return this.get('players');
+  // returns all players
+  public listPlayers(gameID: number): Observable<Player[]> {
+    return this.post('players', {gameID});
   }
 
-  public playerReady(status: boolean, playerName: string): void {
+  public playerReady(status: boolean, id: string): void {
     // send POST request to api with playerReady status
     this.post('ready', {
-      name: playerName,
+      id,
       status
     }).subscribe((response) => response);
   }
@@ -63,6 +69,6 @@ export class ApiService {
   }
 
   public checkID(id: number): Observable<boolean> {
-    return this.post('id', id).pipe(map((response: {response: boolean}) => response.response));
+    return this.post('id', {id}).pipe(map((response: {response: boolean}) => response.response));
   }
 }

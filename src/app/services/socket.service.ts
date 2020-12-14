@@ -20,7 +20,7 @@ export class SocketService {
     this.connect();
 
     this.socket.on('connect', () => {
-      console.log('Connected: ', this.socket.connected);
+      // console.log('Connected: ', this.socket.connected);
     });
 
     this.socket.on('disconnect', (reason) => {
@@ -31,11 +31,7 @@ export class SocketService {
       // else the socket will automatically try to reconnect
     });
 
-    this.socket.on('data', (data: string) => {
-      console.log('Data: ', data);
-    });
-
-    this.socket.on('refresh', (players: Player[]) => {
+    this.socket.on('players', (players: Player[]) => {
       this.players.next(players);
     });
   }

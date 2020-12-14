@@ -11,6 +11,7 @@ import { FooterComponent } from './footer/footer.component';
 import { LoginComponent } from './login/login.component';
 import { GameComponent } from './game/game.component';
 import { Constants } from './config/constants';
+import { StartupComponent } from './startup/startup.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { Constants } from './config/constants';
     NavbarComponent,
     FooterComponent,
     LoginComponent,
-    GameComponent
+    GameComponent,
+    StartupComponent
   ],
   imports: [
     BrowserModule,

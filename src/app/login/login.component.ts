@@ -1,3 +1,4 @@
+import { SocketService } from './../services/socket.service';
 import { GameService } from './../services/game.service';
 import { ApiService } from './../services/api.service';
 import { Component, OnInit } from '@angular/core';
@@ -10,13 +11,19 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
+
+  gameID: number;
+
   constructor(
     private router: Router,
     private apiService: ApiService,
-    private gameService: GameService
+    private gameService: GameService,
+    private socketService: SocketService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.gameID = this.gameService.getGameID();
+  }
 
   onSubmit(loginForm: NgForm): void {
     if (loginForm.valid) {
@@ -27,6 +34,7 @@ export class LoginComponent implements OnInit {
 
       this.apiService.checkID(id).subscribe((valid: boolean) => {
         if (valid) {
+          this.gameService.setGameID(id);
           this.apiService
             .addPlayer(user, id)
             .subscribe((responseId: { response: string }) => {
@@ -39,6 +47,7 @@ export class LoginComponent implements OnInit {
               // save userID in localStorage and send to game
 
               localStorage.setItem('userID', userID);
+              localStorage.setItem('userName', user);
               this.router.navigate(['/game']);
             });
         } else {

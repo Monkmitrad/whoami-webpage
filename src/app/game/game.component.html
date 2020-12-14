@@ -17,7 +17,7 @@
                 <td>{{ player.submissionText }}</td>
                 <td>
                     <label class="b-contain">
-                        <input type="checkbox" (change)="onReady($event)" [disabled]="player.name != ownUser">
+                        <input type="checkbox" (change)="onReady($event)" [disabled]="player.name != ownUser" [checked]="player.ready">
                         <div class="b-input"></div>
                     </label>
                 </td>
