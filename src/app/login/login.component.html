@@ -1,0 +1,32 @@
+<div class="container">
+    <div class="card m-2 p-4">
+        <div class="card-body">
+            <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+                <h1>Login</h1>
+                <p class="text-muted">Sign In with a game ID</p>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="icon-user"></i></span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Name" autocomplete="name" name="name"
+                        required ngModel>
+                </div>
+                <div class="input-group mb-4">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="icon-lock"></i></span>
+                    </div>
+                    <input type="password" class="form-control" placeholder="ID" autocomplete="current-password"
+                        name="id"  required [ngModel]="gameID">
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <button type="submit" class="btn btn-primary px-4" [disabled]="!loginForm.valid">Login</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="alert alert-danger text-center show fade" *ngIf="errorText">
+          <span class="">{{ errorText }}</span>
+        </div>
+    </div>
+</div>
