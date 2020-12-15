@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit {
               this.router.navigate(['/game']);
             });
         } else {
-          // TODO: display that gameID is not valid
+          console.log('GameID ', id, ' is not valid!');
         }
       });
     }

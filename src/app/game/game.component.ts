@@ -34,7 +34,6 @@ export class GameComponent implements OnInit, OnDestroy {
     this.playerSocketSub = this.socketService.players.subscribe((players: Player[]) => {
       this.players = players;
     });
-    console.log(this.gameService.getGameID());
 
     this.listPlayersSub = this.apiService.listPlayers(this.gameService.getGameID()).subscribe((players: Player[]) => {
       // console.log(players);
