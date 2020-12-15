@@ -25,5 +25,8 @@
                 </div>
             </form>
         </div>
+        <div class="alert alert-danger text-center show fade" *ngIf="errorText">
+          <span class="">{{ errorText }}</span>
+        </div>
     </div>
 </div>

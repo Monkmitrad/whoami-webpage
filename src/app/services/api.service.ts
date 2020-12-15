@@ -41,10 +41,11 @@ export class ApiService {
   }
 
   // registers player and return unique id of player
-  public addPlayer(playerName: string, gameID: number): any {
+  public addPlayer(playerName: string, gameID: number, playerID?: string): any {
     return this.post('add', {
       playerName,
-      gameID
+      gameID,
+      playerID
     });
   }
 
@@ -53,22 +54,24 @@ export class ApiService {
     return this.post('players', {gameID});
   }
 
-  public playerReady(status: boolean, id: string): void {
+  public playerReady(status: boolean, id: string, gameID: number): void {
     // send POST request to api with playerReady status
     this.post('ready', {
       id,
-      status
+      status,
+      gameID
     }).subscribe((response) => response);
   }
 
-  public submission(submissionText: string, playerName: string): void {
-    this.post('submission', {
+  public submission(submissionText: string, playerName: string, gameID: number): Observable<boolean> {
+    return this.post('submission', {
       playerName,
-      submissionText
-    }).subscribe((response) => console.log(response));
+      submissionText,
+      gameID
+    }).pipe(map((response: {response: boolean}) => response.response));
   }
 
   public checkID(id: number): Observable<boolean> {
-    return this.post('id', {id}).pipe(map((response: {response: boolean}) => response.response));
+    return this.post('id', {gameID: id}).pipe(map((response: {response: boolean}) => response.response));
   }
 }

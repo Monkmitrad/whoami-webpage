@@ -10,6 +10,7 @@ import { io, Socket } from 'socket.io-client';
 export class SocketService {
 
   players: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
+  status: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   private socket;
 
@@ -23,7 +24,7 @@ export class SocketService {
       // console.log('Connected: ', this.socket.connected);
     });
 
-    this.socket.on('disconnect', (reason) => {
+    this.socket.on('disconnect', (reason: string) => {
       if (reason === 'io server disconnect') {
         // the disconnection was initiated by the server, you need to reconnect manually
         this.socket.connect();
@@ -33,6 +34,10 @@ export class SocketService {
 
     this.socket.on('players', (players: Player[]) => {
       this.players.next(players);
+    });
+
+    this.socket.on('status', (status: boolean) => {
+      this.status.next(status);
     });
   }
 

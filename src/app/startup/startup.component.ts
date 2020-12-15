@@ -23,6 +23,7 @@ export class StartupComponent implements OnInit {
     // TODO: API Request to create new room and return game ID
 
     this.apiService.createGame().subscribe((gameID: number) => {
+      localStorage.clear();
       this.gameService.setGameID(gameID);
       this.router.navigate(['login']);
     });

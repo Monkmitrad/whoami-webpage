@@ -14,7 +14,7 @@
                 <td>{{ players.indexOf(player) }}</td>
                 <td>{{ player.name }}</td>
                 <td>{{ player.assignedPlayer }}</td>
-                <td>{{ player.submissionText }}</td>
+                <td>{{ player.name != ownUser ? player.submissionText: 'Hidden to yourself' }}</td>
                 <td>
                     <label class="b-contain">
                         <input type="checkbox" (change)="onReady($event)" [disabled]="player.name != ownUser" [checked]="player.ready">

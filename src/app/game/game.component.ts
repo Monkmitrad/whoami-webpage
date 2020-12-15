@@ -16,12 +16,13 @@ export class GameComponent implements OnInit, OnDestroy {
   players: Player[] = [];
 
   gameStarted = false;
-  ownUser = 'Test';
-  assignedUser = 'User1';
+  ownUser: string;
+  assignedUser: string;
 
   // Subscriptions
   listPlayersSub: Subscription;
   playerSocketSub: Subscription;
+  statusSocketSub: Subscription;
 
   constructor(
     private apiService: ApiService,
@@ -34,7 +35,11 @@ export class GameComponent implements OnInit, OnDestroy {
     this.playerSocketSub = this.socketService.players.subscribe((players: Player[]) => {
       this.players = players;
     });
-
+    this.statusSocketSub = this.socketService.status.subscribe((status: boolean) => {
+      this.gameStarted = status;
+    });
+    // console.log(this.gameService.getGameID());
+    /*
     this.listPlayersSub = this.apiService.listPlayers(this.gameService.getGameID()).subscribe((players: Player[]) => {
       // console.log(players);
       this.players = [];
@@ -42,33 +47,34 @@ export class GameComponent implements OnInit, OnDestroy {
         this.players.push(element);
       });
     });
+    */
 
     this.ownUser = this.gameService.getName();
   }
 
   ngOnDestroy(): void {
-    this.listPlayersSub.unsubscribe();
+    // this.listPlayersSub.unsubscribe();
     this.playerSocketSub.unsubscribe();
   }
 
   onReady(event: any): void {
     const status: boolean = event.target.checked;
     // console.log(event.target.checked);
-    if (status) {
-      this.gameStarted = true;
-    }
 
-    this.apiService.playerReady(status, this.gameService.getID());
+    this.apiService.playerReady(status, this.gameService.getID(), this.gameService.getGameID());
   }
 
   onSubmit(submissionForm: NgForm): void {
     if (submissionForm.valid) {
       const entry: string = submissionForm.value.submission;
       submissionForm.resetForm();
-      console.log(entry);
+      // console.log(entry);
 
       // TODO: API Request to Server to submit entry
-      this.apiService.submission(entry, this.assignedUser);
+      this.assignedUser = this.players.find((player) => player.name === this.ownUser).assignedPlayer;
+      this.apiService.submission(entry, this.assignedUser, this.gameService.getGameID()).subscribe((response: boolean) => {
+        console.log(response);
+      });
     }
   }
 
