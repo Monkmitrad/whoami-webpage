@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
             .addPlayer(user, id, userID)
             .subscribe((responseId: { response: any }) => {
               if (responseId.response === false) {
-                this.errorText = 'UserName already taken, please chose antother!';
+                this.errorText = 'UserName already taken, please chose another!';
               } else {
                 userID = responseId.response;
 
