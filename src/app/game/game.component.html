@@ -1,5 +1,5 @@
 <div class="container-fluid text-white">
-    <h1 class="text-center m-2">Game</h1>
+    <h1 class="text-center m-2">Game {{ gameID }}</h1>
 
     <table class="table table-dark m-2">
         <thead>
@@ -15,7 +15,7 @@
                 <td>{{ player.name }}</td>
                 <td>{{ player.assignedPlayer }}</td>
                 <td>{{ player.name != ownUser ? player.submissionText: 'Hidden to yourself' }}</td>
-                <td>
+                <td *ngIf="!gameStarted">
                     <label class="b-contain">
                         <input type="checkbox" (change)="onReady($event)" [disabled]="player.name != ownUser" [checked]="player.ready">
                         <div class="b-input"></div>

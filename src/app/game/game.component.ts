@@ -18,6 +18,7 @@ export class GameComponent implements OnInit, OnDestroy {
   gameStarted = false;
   ownUser: string;
   assignedUser: string;
+  gameID: number;
 
   // Subscriptions
   listPlayersSub: Subscription;
@@ -50,6 +51,7 @@ export class GameComponent implements OnInit, OnDestroy {
     */
 
     this.ownUser = this.gameService.getName();
+    this.gameID = this.gameService.getGameID();
   }
 
   ngOnDestroy(): void {
