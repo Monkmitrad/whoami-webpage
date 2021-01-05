@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Constants } from '../config/constants';
 import { tap, map } from 'rxjs/operators';
@@ -22,7 +22,7 @@ export class ApiService {
   }
 
   public post(url: string, data?: any, options?: any): Observable<any> {
-    return this.http.post(this.constants.API_ENDPOINT + url, data, options);
+    return this.http.post(this.constants.API_ENDPOINT + url, data, {headers: new HttpHeaders().set('API-Key', this.constants.API_KEY)});
   }
 
   public put(url: string, data?: any, options?: any): any {
