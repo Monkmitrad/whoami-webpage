@@ -1,8 +1,11 @@
+import { getTestBed } from '@angular/core/testing';
+import { ApiService } from './api.service';
 import { Constants } from './../config/constants';
 import { Player } from './../shared/models/player';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
+import { GameService } from './game.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,19 +15,28 @@ export class SocketService {
   players: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
   status: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  private socket;
+  private socket: Socket;
 
   constructor(
-    private constants: Constants
+    private constants: Constants,
+    private apiService: ApiService,
+    private gameService: GameService
   ) {
-    this.socket = io(this.constants.SOCKET_ENDPOINT);
-    this.connect();
+    const gameID = this.gameService.getGameID();
+    if (gameID) {
+      this.socket = io(this.constants.SOCKET_ENDPOINT, {query: {gameID: gameID}});
+      this.connect();
+    } else {
+      this.socket = io(this.constants.SOCKET_ENDPOINT, {query: {gameID: 0}});
+      this.connect();
+    }
 
     this.socket.on('connect', () => {
       // console.log('Connected: ', this.socket.connected);
     });
 
     this.socket.on('disconnect', (reason: string) => {
+//      console.log('Disconnected');
       if (reason === 'io server disconnect') {
         // the disconnection was initiated by the server, you need to reconnect manually
         this.socket.connect();
@@ -32,16 +44,24 @@ export class SocketService {
       // else the socket will automatically try to reconnect
     });
 
-    this.socket.on('players', (players: Player[]) => {
-      this.players.next(players);
-    });
-
-    this.socket.on('status', (status: boolean) => {
-      this.status.next(status);
+    this.socket.on('refresh', () => {
+      // trigger ApiService to fetch gameData
+      this.apiService.getData(this.gameService.getToken()).subscribe((gameData) => {
+        this.status.next(gameData.status);
+        this.players.next(gameData.players);
+      });
     });
   }
 
-  connect(): void {
+  public connect(): void {
+    // console.log('Connect socket ', this.socket);
     this.socket.connect();
+  }
+
+  public disconnect(): void {
+    // console.log('Initiate disconnect');
+    if (this.socket) {
+      this.socket.close();
+    }
   }
 }

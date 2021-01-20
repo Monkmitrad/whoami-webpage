@@ -14,10 +14,10 @@
                 <td>{{ players.indexOf(player) }}</td>
                 <td>{{ player.name }}</td>
                 <td>{{ player.assignedPlayer }}</td>
-                <td>{{ player.name != ownUser ? player.submissionText: 'Hidden to yourself' }}</td>
+                <td>{{ player.name }}</td>
                 <td *ngIf="!gameStarted">
                     <label class="b-contain">
-                        <input type="checkbox" (change)="onReady($event)" [disabled]="player.name != ownUser" [checked]="player.ready">
+                        <input type="checkbox" (change)="onReady($event)" [disabled]="player.name != playerName" [checked]="player.ready">
                         <div class="b-input"></div>
                     </label>
                 </td>

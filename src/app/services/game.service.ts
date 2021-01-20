@@ -5,36 +5,36 @@ import { Injectable } from '@angular/core';
 })
 export class GameService {
 
-  private ownName: string;
+  private playerName: string;
   private gameID: number;
+  private jwt: string;
 
   constructor() { }
 
   public login(playerName: string): void {
-    this.ownName = playerName;
+    this.playerName = playerName;
   }
 
   public getName(): string {
-    if (this.ownName) {
-      return this.ownName;
-    } else {
-      return localStorage.getItem('userName');
-    }
-  }
-
-  public getID(): string {
-    return localStorage.getItem('userID');
+    return this.playerName;
   }
 
   public getGameID(): number {
     if (this.gameID) {
       return this.gameID;
-    } else {
-      return;
     }
   }
 
   public setGameID(gameID: number): void {
     this.gameID = gameID;
+  }
+
+  getToken(): string {
+    return this.jwt;
+  }
+  
+  setToken(token: string): void {
+    this.jwt = token;
+    localStorage.setItem('jwt', token);
   }
 }
