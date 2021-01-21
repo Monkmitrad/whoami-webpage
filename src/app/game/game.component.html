@@ -5,16 +5,16 @@
         <thead>
             <th>#</th>
             <th>Name</th>
-            <th>Assigned Player</th>
-            <th>Person/Animal/Character to guess</th>
-            <th *ngIf="!gameStarted">Ready</th>
+            <th *ngIf="gameStarted" >Assigned Player</th>
+            <th *ngIf="gameStarted" >Person/Animal/Character to guess</th>
+            <th *ngIf="!gameStarted" >Ready</th>
         </thead>
         <tbody>
             <tr *ngFor="let player of players">
                 <td>{{ players.indexOf(player) }}</td>
                 <td>{{ player.name }}</td>
-                <td>{{ player.assignedPlayer }}</td>
-                <td>{{ player.name }}</td>
+                <td *ngIf="gameStarted" >{{ player.assignedPlayer }}</td>
+                <td *ngIf="gameStarted" >{{ player.submissionText }}</td>
                 <td *ngIf="!gameStarted">
                     <label class="b-contain">
                         <input type="checkbox" (change)="onReady($event)" [disabled]="player.name != playerName" [checked]="player.ready">

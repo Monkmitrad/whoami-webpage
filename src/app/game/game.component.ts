@@ -36,6 +36,18 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
+    const jwt: string = localStorage.getItem('jwt');
+    if (jwt) {
+      // check if token valid and game still exists
+      this.apiService.rejoin(jwt).subscribe((status: boolean) => {
+        if (status) {
+          // game still exists
+        } else {
+          
+          
+        }
+      });
+    }
     this.gameID = this.gameService.getGameID();
     
     if (!this.gameID) {
@@ -74,12 +86,10 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     if (submissionForm.valid) {
       const entry: string = submissionForm.value.submission;
       submissionForm.resetForm();
-      // console.log(entry);
 
       // TODO: API Request to Server to submit entry
       this.assignedUser = this.players.find((player) => player.name === this.playerName).assignedPlayer;
-      this.apiService.submission(entry, this.assignedUser, this.gameService.getGameID()).subscribe((response: boolean) => response);
+      this.apiService.submission(this.gameID, this.assignedUser, entry, this.gameService.getToken()).subscribe((response: boolean) => console.log(response));
     }
   }
-
 }

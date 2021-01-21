@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private apiService: ApiService,
     private gameService: GameService,
-    //private socketService: SocketService
+    private socketService: SocketService
   ) {}
 
   ngOnInit(): void {
@@ -45,9 +45,13 @@ export class LoginComponent implements OnInit {
           case 'Internal server error on login':
             this.errorText = response;
             break;
+          case 'Game has already started':
+            this.errorText = response;
+            break;
           default:
             this.gameService.setToken(response.response);
             this.gameService.setGameID(id);
+            this.socketService.setSocket(id);
             this.gameService.login(user);
             this.router.navigate(['game']);
             break;

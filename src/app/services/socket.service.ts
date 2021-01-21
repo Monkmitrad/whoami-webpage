@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { GameService } from './game.service';
+import { Game } from '../shared/models/game';
 
 @Injectable({
   providedIn: 'root'
@@ -46,8 +47,8 @@ export class SocketService {
 
     this.socket.on('refresh', () => {
       // trigger ApiService to fetch gameData
-      this.apiService.getData(this.gameService.getToken()).subscribe((gameData) => {
-        this.status.next(gameData.status);
+      this.apiService.getData(this.gameService.getToken()).subscribe((gameData: Game) => {
+        this.status.next(gameData.gameStatus);
         this.players.next(gameData.players);
       });
     });
@@ -62,6 +63,11 @@ export class SocketService {
     // console.log('Initiate disconnect');
     if (this.socket) {
       this.socket.close();
+      this.socket = io(this.constants.SOCKET_ENDPOINT, {query: {gameID: 0}});
     }
+  }
+
+  public setSocket(gameID: number): void {
+    this.socket = io(this.constants.SOCKET_ENDPOINT, {query: {gameID: gameID}});
   }
 }

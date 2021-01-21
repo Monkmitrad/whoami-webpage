@@ -76,12 +76,12 @@ export class ApiService {
     }, {headers: new HttpHeaders().set('Authorization', token)}).subscribe((response) => response);
   }
 
-  public submission(submissionText: string, playerName: string, gameID: number): Observable<boolean> {
-    return this.post('submission', {
+  public submission(gameID: number, playerName: string, entry: string, token: string): Observable<boolean> {
+    return this.post('submit', {
+      gameID,
       playerName,
-      submissionText,
-      gameID
-    }).pipe(map((response: {response: boolean}) => response.response));
+      entry
+    }, {headers: new HttpHeaders().set('Authorization', token)}).pipe(map((response: {response: boolean}) => response.response));
   }
 
   public checkID(id: number): Observable<boolean> {
@@ -93,19 +93,7 @@ export class ApiService {
     return this.get('data', {headers: new HttpHeaders().set('Authorization', token)}).pipe(map((response: {response: any}) => response.response));
   }
 
-  private handleError(error: HttpErrorResponse): Observable<string> {
-    let errorMessage = 'An unkwon error occured';
-    switch (error.error.response) {
-      case 'Username already taken':
-        errorMessage = error.error.response;
-        break;
-      case 'Invalid gameID':
-        errorMessage = error.error.response;
-        break;
-      case 'Internal server error on login':
-        errorMessage = error.error.response;
-        break;
-    }
-    return of(errorMessage);
+  public rejoin(token: string): Observable<boolean> {
+    return of(true);
   }
 }
