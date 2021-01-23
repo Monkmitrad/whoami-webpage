@@ -1,9 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Constants } from '../config/constants';
-import { tap, map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { tap, map, catchError } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
 import { Player } from '../shared/models/player';
+import { Game } from '../shared/models/game';
+import { errorMonitor } from 'events';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +24,19 @@ export class ApiService {
   }
 
   public post(url: string, data?: any, options?: any): Observable<any> {
-    return this.http.post(this.constants.API_ENDPOINT + url, data, options);
+    return this.http.post(this.constants.API_ENDPOINT + url, data, options).pipe(
+      catchError((err) => {
+        if (err instanceof HttpErrorResponse) {
+          if (err.error.response) {
+            // Error created by the game logic
+            return of(err.error.response);  
+          }
+        }
+        console.log(err);
+
+        return throwError(err);    //Rethrow it back to component
+      })
+    );
   }
 
   public put(url: string, data?: any, options?: any): any {
@@ -41,11 +55,10 @@ export class ApiService {
   }
 
   // registers player and return unique id of player
-  public addPlayer(playerName: string, gameID: number, playerID?: string): any {
-    return this.post('add', {
-      playerName,
+  public login(gameID: number, playerName: string): any {
+    return this.post('login', {
       gameID,
-      playerID
+      playerName
     });
   }
 
@@ -54,24 +67,33 @@ export class ApiService {
     return this.post('players', {gameID});
   }
 
-  public playerReady(status: boolean, id: string, gameID: number): void {
+  public playerReady(gameID: number, playerName: string, status: boolean, token: string): void {
     // send POST request to api with playerReady status
     this.post('ready', {
-      id,
+      gameID,
+      playerName,
       status,
-      gameID
-    }).subscribe((response) => response);
+    }, {headers: new HttpHeaders().set('Authorization', token)}).subscribe((response) => response);
   }
 
-  public submission(submissionText: string, playerName: string, gameID: number): Observable<boolean> {
-    return this.post('submission', {
+  public submission(gameID: number, playerName: string, entry: string, token: string): Observable<boolean> {
+    return this.post('submit', {
+      gameID,
       playerName,
-      submissionText,
-      gameID
-    }).pipe(map((response: {response: boolean}) => response.response));
+      entry
+    }, {headers: new HttpHeaders().set('Authorization', token)}).pipe(map((response: {response: boolean}) => response.response));
   }
 
   public checkID(id: number): Observable<boolean> {
     return this.post('id', {gameID: id}).pipe(map((response: {response: boolean}) => response.response));
+  }
+
+  // get current gameData
+  public getData(token: string): Observable<any> {
+    return this.get('data', {headers: new HttpHeaders().set('Authorization', token)}).pipe(map((response: {response: any}) => response.response));
+  }
+
+  public rejoin(token: string): Observable<boolean> {
+    return of(true);
   }
 }

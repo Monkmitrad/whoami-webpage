@@ -5,19 +5,19 @@
         <thead>
             <th>#</th>
             <th>Name</th>
-            <th>Assigned Player</th>
-            <th>Person/Animal/Character to guess</th>
-            <th *ngIf="!gameStarted">Ready</th>
+            <th *ngIf="gameStarted" >Assigned Player</th>
+            <th *ngIf="gameStarted" >Person/Animal/Character to guess</th>
+            <th *ngIf="!gameStarted" >Ready</th>
         </thead>
         <tbody>
             <tr *ngFor="let player of players">
                 <td>{{ players.indexOf(player) }}</td>
                 <td>{{ player.name }}</td>
-                <td>{{ player.assignedPlayer }}</td>
-                <td>{{ player.name != ownUser ? player.submissionText: 'Hidden to yourself' }}</td>
+                <td *ngIf="gameStarted" >{{ player.assignedPlayer }}</td>
+                <td *ngIf="gameStarted" >{{ player.submissionText }}</td>
                 <td *ngIf="!gameStarted">
                     <label class="b-contain">
-                        <input type="checkbox" (change)="onReady($event)" [disabled]="player.name != ownUser" [checked]="player.ready">
+                        <input type="checkbox" (change)="onReady($event)" [disabled]="player.name != playerName" [checked]="player.ready">
                         <div class="b-input"></div>
                     </label>
                 </td>
@@ -34,4 +34,8 @@
         </div>
         <button type="submit" class="btn btn-primary px-4 w-50" [disabled]="!submissionForm.valid">Submit</button>
     </form>
+
+    <div class="alert alert-info text-center show fade mt-4" *ngIf="infoText">
+        <span class="">{{ infoText }}</span>
+      </div>
 </div>
