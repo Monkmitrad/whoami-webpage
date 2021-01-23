@@ -21,10 +21,12 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   assignedUser: string;
   gameID: number;
 
+  infoText: string;
+
   // Subscriptions
-  listPlayersSub: Subscription;
   playerSocketSub: Subscription;
   statusSocketSub: Subscription;
+  startSocketSub: Subscription;
 
   constructor(
     private apiService: ApiService,
@@ -63,6 +65,13 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     this.statusSocketSub = this.socketService.status.subscribe((status: boolean) => {
       this.gameStarted = status;
     });
+
+    this.startSocketSub = this.socketService.start.subscribe((start: boolean) => {
+      this.infoText = 'Guessing can start';
+      setInterval(() => {
+        this.infoText = '';
+      }, 5000);
+    });
   }
   
   ngAfterViewInit(): void {
@@ -87,7 +96,6 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
       const entry: string = submissionForm.value.submission;
       submissionForm.resetForm();
 
-      // TODO: API Request to Server to submit entry
       this.assignedUser = this.players.find((player) => player.name === this.playerName).assignedPlayer;
       this.apiService.submission(this.gameID, this.assignedUser, entry, this.gameService.getToken()).subscribe((response: boolean) => console.log(response));
     }

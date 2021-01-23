@@ -22,7 +22,6 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private apiService: ApiService,
     private gameService: GameService,
-    private socketService: SocketService
   ) {}
 
   ngOnInit(): void {
@@ -51,7 +50,6 @@ export class LoginComponent implements OnInit {
           default:
             this.gameService.setToken(response.response);
             this.gameService.setGameID(id);
-            this.socketService.setSocket(id);
             this.gameService.login(user);
             this.router.navigate(['game']);
             break;

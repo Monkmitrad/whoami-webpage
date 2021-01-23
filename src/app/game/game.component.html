@@ -34,4 +34,8 @@
         </div>
         <button type="submit" class="btn btn-primary px-4 w-50" [disabled]="!submissionForm.valid">Submit</button>
     </form>
+
+    <div class="alert alert-info text-center show fade mt-4" *ngIf="infoText">
+        <span class="">{{ infoText }}</span>
+      </div>
 </div>

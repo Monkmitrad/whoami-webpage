@@ -3,7 +3,7 @@ import { ApiService } from './api.service';
 import { Constants } from './../config/constants';
 import { Player } from './../shared/models/player';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { GameService } from './game.service';
 import { Game } from '../shared/models/game';
@@ -15,6 +15,7 @@ export class SocketService {
 
   players: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
   status: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  start: Subject<boolean> = new Subject<boolean>();
 
   private socket: Socket;
 
@@ -52,6 +53,11 @@ export class SocketService {
         this.players.next(gameData.players);
       });
     });
+
+    this.socket.on('start', () => {
+      // all players have submitted, notify player that guessing can start
+      this.start.next(true);
+    });
   }
 
   public connect(): void {
@@ -65,9 +71,5 @@ export class SocketService {
       this.socket.close();
       this.socket = io(this.constants.SOCKET_ENDPOINT, {query: {gameID: 0}});
     }
-  }
-
-  public setSocket(gameID: number): void {
-    this.socket = io(this.constants.SOCKET_ENDPOINT, {query: {gameID: gameID}});
   }
 }
