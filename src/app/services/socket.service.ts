@@ -24,12 +24,15 @@ export class SocketService {
     private apiService: ApiService,
     private gameService: GameService
   ) {
-    console.log('Construct');
+    // console.log('Construct');
     const gameID = this.gameService.getGameID();
     if (gameID) {
       this.socket = io(constants.SOCKET_ENDPOINT, {query: {gameID: gameID}});
+      if (this.socket.disconnected) {
+        this.socket = io(constants.SOCKET_ENDPOINT, {query: {gameID: gameID}});
+      }
     } else {
-      console.log('Empty connect');
+      // console.log('Empty connect');
       // this.socket = io(constants.SOCKET_ENDPOINT, {query: {gameID: 0}});
       return;
     }
