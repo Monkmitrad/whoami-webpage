@@ -24,21 +24,21 @@ export class SocketService {
     private apiService: ApiService,
     private gameService: GameService
   ) {
+    console.log('Construct');
     const gameID = this.gameService.getGameID();
     if (gameID) {
-      this.socket = io(this.constants.SOCKET_ENDPOINT, {query: {gameID: gameID}});
-      this.connect();
+      this.socket = io(constants.SOCKET_ENDPOINT, {query: {gameID: gameID}});
     } else {
-      this.socket = io(this.constants.SOCKET_ENDPOINT, {query: {gameID: 0}});
-      this.connect();
+      console.log('Empty connect');
+      // this.socket = io(constants.SOCKET_ENDPOINT, {query: {gameID: 0}});
+      return;
     }
 
     this.socket.on('connect', () => {
-      // console.log('Connected: ', this.socket.connected);
+      // console.log(this.socket.connected);
     });
 
     this.socket.on('disconnect', (reason: string) => {
-//      console.log('Disconnected');
       if (reason === 'io server disconnect') {
         // the disconnection was initiated by the server, you need to reconnect manually
         this.socket.connect();
@@ -48,6 +48,7 @@ export class SocketService {
 
     this.socket.on('refresh', () => {
       // trigger ApiService to fetch gameData
+      console.log('Refresh');
       this.apiService.getData(this.gameService.getToken()).subscribe((gameData: Game) => {
         this.status.next(gameData.gameStatus);
         this.players.next(gameData.players);
@@ -61,12 +62,10 @@ export class SocketService {
   }
 
   public connect(): void {
-    // console.log('Connect socket ', this.socket);
     this.socket.connect();
   }
 
   public disconnect(): void {
-    // console.log('Initiate disconnect');
     if (this.socket) {
       this.socket.close();
       this.socket = io(this.constants.SOCKET_ENDPOINT, {query: {gameID: 0}});

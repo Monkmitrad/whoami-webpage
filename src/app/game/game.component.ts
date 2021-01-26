@@ -33,9 +33,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     private socketService: SocketService,
     private gameService: GameService,
     private router: Router
-  ) {
-    this.socketService.connect();
-  }
+  ) { }
 
   ngOnInit(): void {
     const jwt: string = localStorage.getItem('jwt');
@@ -46,7 +44,6 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
           // game still exists
         } else {
           
-          
         }
       });
     }
@@ -56,7 +53,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
       this.router.navigate(['login']);
       return;
     }
-
+    
     this.playerName = this.gameService.getName();
 
     this.playerSocketSub = this.socketService.players.subscribe((players: Player[]) => {
@@ -75,14 +72,26 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   
   ngAfterViewInit(): void {
-    this.socketService.connect();
+    /*this.apiService.getData(this.gameService.getToken()).subscribe((data: Game) => {
+      this.players = data.players;
+      this.gameStarted = data.gameStatus;
+    });*/
   }
 
   ngOnDestroy(): void {
     if (this.playerSocketSub) {
       this.playerSocketSub.unsubscribe();
     }
+    if (this.statusSocketSub) {
+      this.statusSocketSub.unsubscribe();
+    }
+    if (this.startSocketSub) {
+      this.startSocketSub.unsubscribe();
+    }
     this.socketService.disconnect();
+    if (this.gameID) {
+      this.apiService.disconnect(this.gameID, this.playerName, this.gameService.getToken());
+    }
   }
 
   onReady(event: any): void {

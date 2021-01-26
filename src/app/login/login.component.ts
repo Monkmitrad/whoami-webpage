@@ -22,10 +22,12 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private apiService: ApiService,
     private gameService: GameService,
+    //private socketService: SocketService
   ) {}
 
   ngOnInit(): void {
     this.gameID = this.gameService.getGameID();
+    //this.socketService.setSocket(0);
   }
 
   onSubmit(loginForm: NgForm): void {
@@ -45,6 +47,9 @@ export class LoginComponent implements OnInit {
             this.errorText = response;
             break;
           case 'Game has already started':
+            this.errorText = response;
+            break;
+          case 'playerName not valid':
             this.errorText = response;
             break;
           default:

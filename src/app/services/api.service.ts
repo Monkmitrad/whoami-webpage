@@ -89,11 +89,15 @@ export class ApiService {
   }
 
   // get current gameData
-  public getData(token: string): Observable<any> {
-    return this.get('data', {headers: new HttpHeaders().set('Authorization', token)}).pipe(map((response: {response: any}) => response.response));
+  public getData(token: string): Observable<Game> {
+    return this.get('data', {headers: new HttpHeaders().set('Authorization', token)}).pipe(map((response: {response: Game}) => response.response));
   }
 
   public rejoin(token: string): Observable<boolean> {
     return of(true);
+  }
+
+  disconnect(gameID: number, playerName: string, token: string): void {
+    this.post('disconnect', {gameID, playerName}, {headers: new HttpHeaders().set('Authorization', token)}).subscribe((response) => console.log(response));
   }
 }
