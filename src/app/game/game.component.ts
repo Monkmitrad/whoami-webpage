@@ -49,7 +49,9 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     this.gameID = this.gameService.getGameID();
     
-    if (!this.gameID) {
+    if (this.gameID) {
+      this.socketService.setSocket(this.gameID);
+    } else {
       this.router.navigate(['login']);
       return;
     }
@@ -88,7 +90,6 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.startSocketSub) {
       this.startSocketSub.unsubscribe();
     }
-    this.socketService.disconnect();
     if (this.gameID) {
       this.apiService.disconnect(this.gameID, this.playerName, this.gameService.getToken());
     }

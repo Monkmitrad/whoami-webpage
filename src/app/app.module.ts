@@ -1,4 +1,3 @@
-import { SocketService } from './services/socket.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +11,7 @@ import { LoginComponent } from './login/login.component';
 import { GameComponent } from './game/game.component';
 import { Constants } from './config/constants';
 import { StartupComponent } from './startup/startup.component';
+import { SocketService } from './services/socket.service';
 
 @NgModule({
   declarations: [
@@ -26,7 +26,7 @@ import { StartupComponent } from './startup/startup.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule,
+    HttpClientModule
   ],
   providers: [Constants, SocketService],
   bootstrap: [AppComponent]

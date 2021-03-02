@@ -13,29 +13,18 @@ import { Game } from '../shared/models/game';
 })
 export class SocketService {
 
+  private socket: Socket;
+
   players: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
   status: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   start: Subject<boolean> = new Subject<boolean>();
-
-  private socket: Socket;
 
   constructor(
     private constants: Constants,
     private apiService: ApiService,
     private gameService: GameService
   ) {
-    // console.log('Construct');
-    const gameID = this.gameService.getGameID();
-    if (gameID) {
-      this.socket = io(constants.SOCKET_ENDPOINT, {query: {gameID: gameID}});
-      if (this.socket.disconnected) {
-        this.socket = io(constants.SOCKET_ENDPOINT, {query: {gameID: gameID}});
-      }
-    } else {
-      // console.log('Empty connect');
-      // this.socket = io(constants.SOCKET_ENDPOINT, {query: {gameID: 0}});
-      return;
-    }
+    this.socket = io(this.constants.SOCKET_ENDPOINT, { autoConnect: false });
 
     this.socket.on('connect', () => {
       // console.log(this.socket.connected);
@@ -71,7 +60,11 @@ export class SocketService {
   public disconnect(): void {
     if (this.socket) {
       this.socket.close();
-      this.socket = io(this.constants.SOCKET_ENDPOINT, {query: {gameID: 0}});
     }
+  }
+  
+  setSocket(gameID: number): void {
+    this.socket.io.opts.query = { gameID: gameID.toString() };
+    this.socket.connect();
   }
 }

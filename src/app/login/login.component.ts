@@ -22,12 +22,10 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private apiService: ApiService,
     private gameService: GameService,
-    //private socketService: SocketService
   ) {}
 
   ngOnInit(): void {
     this.gameID = this.gameService.getGameID();
-    //this.socketService.setSocket(0);
   }
 
   onSubmit(loginForm: NgForm): void {
